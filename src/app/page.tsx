@@ -12,11 +12,8 @@ import {
   Fingerprint,
   KeyRound,
   LockKeyhole,
-  Mail,
-  MessageCircle,
   QrCode,
   ShieldCheck,
-  Smartphone,
   TimerReset,
   UploadCloud,
   UsersRound,
@@ -98,8 +95,8 @@ async function encryptText(plaintext: string, passphrase: string): Promise<Envel
 const pillars = [
   {
     icon: ShieldCheck,
-    title: "Zero-knowledge de verdade",
-    text: "O app trabalha para que notas e anexos sejam cifrados antes do upload. O servidor orquestra prazos, mas nao precisa ler o cofre.",
+    title: "Privacidade por desenho",
+    text: "Suas instrucoes ficam protegidas antes de sair do seu dispositivo. A plataforma conduz o processo sem transformar privacidade em promessa vazia.",
   },
   {
     icon: TimerReset,
@@ -109,28 +106,28 @@ const pillars = [
   {
     icon: UsersRound,
     title: "Destinatarios com regras",
-    text: "Cada pessoa recebe papel, canal verificado e politica de acesso ao pacote cifrado conforme o plano do titular.",
+    text: "Cada pessoa recebe papel, canal verificado e permissao conforme o plano do titular.",
   },
 ];
 
 const channels = [
-  ["Push web/PWA", "Lembretes rapidos e check-in em um toque.", "Principal MVP"],
-  ["E-mail", "Redundancia universal, trilha documental e links expirados.", "Obrigatorio"],
-  ["Telegram", "Nudges e botoes rapidos, sem payload sensivel.", "Lembrete"],
-  ["WhatsApp", "Alto alcance com opt-in e templates aprovados.", "Premium"],
-  ["Passkeys/TOTP", "Step-up auth e revalidacao forte.", "Seguranca"],
+  ["App", "Lembretes rapidos e confirmacao simples.", "Principal"],
+  ["E-mail", "Redundancia universal e historico de avisos.", "Obrigatorio"],
+  ["Mensageiros", "Alertas curtos para trazer a pessoa de volta ao fluxo seguro.", "Lembrete"],
+  ["Telefone", "Alcance maior para planos pagos e avisos importantes.", "Premium"],
+  ["Entrada segura", "Revalidacao forte antes de mudancas sensiveis.", "Seguranca"],
 ];
 
 const roadmap = [
-  ["Fundacao", "Auth, passkeys, TOTP, envelopes cifrados e stack local.", "2-3 sem."],
+  ["Fundacao", "Conta, entrada segura, primeiro cofre e ambiente local.", "2-3 sem."],
   ["MVP privado", "Check-ins, grace period, push/e-mail, destinatarios e hold final.", "3-5 sem."],
-  ["Beta fechado", "Anexos grandes, Telegram bot, restore drill e docs legais basicas.", "2-4 sem."],
-  ["Beta pago", "WhatsApp premium, billing, sponsor page e auditoria interna.", "3-4 sem."],
+  ["Beta fechado", "Anexos, lembretes externos, recuperacao testada e docs legais basicas.", "2-4 sem."],
+  ["Beta pago", "Canais premium, cobranca, pagina de apoio e revisao de seguranca.", "3-4 sem."],
 ];
 
 export default function Home() {
   const [secret, setSecret] = useState(
-    "Instrucoes privadas: entregar pacote cifrado somente apos hold final.",
+    "Instrucoes privadas: entregar somente apos o periodo final de confirmacao.",
   );
   const [passphrase, setPassphrase] = useState("uma-passphrase-local-forte");
   const [envelope, setEnvelope] = useState<Envelope | null>(null);
@@ -138,8 +135,15 @@ export default function Home() {
   const [error, setError] = useState("");
 
   const envelopePreview = useMemo(() => {
-    if (!envelope) return "Clique em cifrar para gerar um envelope AES-GCM local.";
-    return JSON.stringify(envelope, null, 2);
+    if (!envelope) {
+      return "Clique em proteger para gerar um pacote lacrado no seu dispositivo.";
+    }
+    return [
+      "Pacote lacrado pronto.",
+      "A nota original nao aparece aqui.",
+      "Use o download apenas como demonstracao local.",
+      `Tamanho protegido: ${envelope.cipherB64.length} caracteres.`,
+    ].join("\n");
   }, [envelope]);
 
   async function handleEncrypt() {
@@ -204,7 +208,7 @@ export default function Home() {
             </p>
             <h1>If I Die</h1>
             <p className="hero-copy">
-              Um orquestrador para check-ins, cofres criptografados client-side,
+              Um orquestrador para check-ins, cofres privados,
               destinatarios verificados e liberacao gradual de instrucoes privadas. O
               foco nao e prometer testamento digital: e reduzir risco operacional e
               preservar continuidade.
@@ -222,15 +226,15 @@ export default function Home() {
             <div className="hero-metrics" aria-label="Resumo do MVP">
               <div className="metric">
                 <strong>0</strong>
-                <span>segredos em claro no servidor</span>
+                <span>conteudo privado exposto</span>
               </div>
               <div className="metric">
                 <strong>4</strong>
                 <span>etapas antes da liberacao</span>
               </div>
               <div className="metric">
-                <strong>AGPL</strong>
-                <span>base pensada para open source</span>
+                <strong>Aberto</strong>
+                <span>base aberta e auditavel</span>
               </div>
             </div>
           </div>
@@ -249,20 +253,20 @@ export default function Home() {
                   <Fingerprint size={20} />
                 </span>
                 <div>
-                  <h3>Passkey + TOTP</h3>
-                  <p>Step-up auth antes de editar regras sensiveis.</p>
+                  <h3>Entrada segura</h3>
+                  <p>Confirmacao forte antes de editar regras sensiveis.</p>
                 </div>
-                <span className="tag">MFA</span>
+                <span className="tag">protecao</span>
               </div>
               <div className="vault-row">
                 <span className="icon-box">
                   <UploadCloud size={20} />
                 </span>
                 <div>
-                  <h3>Manifesto cifrado</h3>
-                  <p>Envelope AES-GCM com AAD e versionamento.</p>
+                  <h3>Pacote lacrado</h3>
+                  <p>As instrucoes ficam protegidas antes de serem guardadas.</p>
                 </div>
-                <span className="tag">client-side</span>
+                <span className="tag">privado</span>
               </div>
               <div className="vault-row">
                 <span className="icon-box">
@@ -270,7 +274,7 @@ export default function Home() {
                 </span>
                 <div>
                   <h3>Escalonamento</h3>
-                  <p>Push, e-mail, Telegram e hold final.</p>
+                  <p>Avisos progressivos antes de qualquer entrega.</p>
                 </div>
                 <span className="tag">anti falso positivo</span>
               </div>
@@ -279,10 +283,10 @@ export default function Home() {
                   <Database size={20} />
                 </span>
                 <div>
-                  <h3>Storage burro</h3>
-                  <p>Postgres para metadados; MinIO para blobs cifrados.</p>
+                  <h3>Registro de eventos</h3>
+                  <p>Prazos, confirmacoes e tentativas ficam auditaveis.</p>
                 </div>
-                <span className="tag">self-host</span>
+                <span className="tag">auditoria</span>
               </div>
             </div>
           </aside>
@@ -296,7 +300,7 @@ export default function Home() {
             <p className="section-lead">
               O MVP trata continuidade digital como fluxo de operacao privada:
               planejar, checar vida, escalar, bloquear falso positivo e entregar
-              pacote cifrado ao destinatario certo.
+              pacote protegido ao destinatario certo.
             </p>
           </div>
         </div>
@@ -319,11 +323,10 @@ export default function Home() {
       <section className="section" id="cripto">
         <div className="section-head">
           <div>
-            <h2>Cofre client-side</h2>
+            <h2>Cofre privado</h2>
             <p className="section-lead">
-              Esta demonstracao cifra no navegador com Web Crypto. Para producao, a
-              derivacao principal deve evoluir para Argon2id via libsodium.js e
-              anexos grandes com streaming.
+              Esta demonstracao protege uma nota no seu dispositivo e mostra apenas um
+              resumo seguro. Detalhes de implementacao ficam fora da tela publica.
             </p>
           </div>
         </div>
@@ -351,21 +354,21 @@ export default function Home() {
               <div className="copy-row">
                 <button className="button primary" onClick={handleEncrypt} disabled={isEncrypting}>
                   <KeyRound size={18} />
-                  {isEncrypting ? "Cifrando..." : "Cifrar localmente"}
+                  {isEncrypting ? "Protegendo..." : "Proteger nota"}
                 </button>
                 <button className="button" onClick={downloadEnvelope} disabled={!envelope}>
                   <Download size={18} />
-                  Baixar envelope
+                  Baixar pacote
                 </button>
               </div>
             </div>
           </div>
           <div className="result-panel">
             <div className="panel-pad">
-              <strong>Envelope que iria para a API</strong>
+              <strong>Resultado seguro</strong>
               <p className="section-lead">
-                O servidor receberia este JSON e os metadados operacionais, nao a nota
-                em claro.
+                A tela confirma o estado sem expor detalhes internos nem repetir o
+                conteudo protegido.
               </p>
             </div>
             <pre className="result-code">{envelopePreview}</pre>
@@ -378,8 +381,8 @@ export default function Home() {
           <div>
             <h2>Canais como notificacao</h2>
             <p className="section-lead">
-              Push, e-mail e bots conduzem o fluxo. Segredo sensivel fica em pacote
-              cifrado, aberto no cliente ou por chave publica do destinatario.
+              Os canais conduzem a pessoa de volta para um fluxo seguro. Segredo
+              sensivel nao deve circular em mensagens soltas.
             </p>
           </div>
         </div>
@@ -442,32 +445,6 @@ export default function Home() {
               </p>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="section" aria-label="Stack tecnica">
-        <div className="grid">
-          <article className="card">
-            <span className="icon-box">
-              <Smartphone size={21} />
-            </span>
-            <h3>PWA primeiro</h3>
-            <p>Next.js, Web Push, passkeys e instalacao web antes de wrapper mobile.</p>
-          </article>
-          <article className="card">
-            <span className="icon-box">
-              <Mail size={21} />
-            </span>
-            <h3>Notificacoes auditaveis</h3>
-            <p>Resend no MVP, Mailpit local e Postal como rota self-host futura.</p>
-          </article>
-          <article className="card">
-            <span className="icon-box">
-              <MessageCircle size={21} />
-            </span>
-            <h3>Bots sem segredo</h3>
-            <p>Telegram e WhatsApp avisam e redirecionam para o portal seguro.</p>
-          </article>
         </div>
       </section>
 
